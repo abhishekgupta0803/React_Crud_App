@@ -1,10 +1,12 @@
 import {Employees} from "./data.js";
+import { v4 as uuidv4 } from 'uuid';
 import { useState,useEffect } from "react";
 function App() {
 
   const [data , setData] = useState([]);
   const [update , setUpdate] = useState(true);
 
+  const [id , setId] = useState(uuidv4());
   const [name , setName] = useState('');
   const [age , setAge] = useState('');
 
@@ -34,6 +36,36 @@ function App() {
     setUpdate(true);
   }
     
+  const toSave = () =>{
+
+    const newData = {
+
+      id : id,
+      name : name,
+      age : age,
+    }
+
+      setData([...data, newData]); 
+
+      setName("");
+      setAge("");
+  }
+
+  const toupdate = () =>{
+    const index =  data.map((item)=>{
+      return item.id
+    }).indexOf(id);
+
+    const dt = [...data];
+    dt[index].name = name;
+    dt[index].age = age;
+
+
+    setData(dt);
+    toClear();
+
+  }
+    
     
 
   return (
@@ -43,12 +75,12 @@ function App() {
         <label >Enter Name</label> 
         <input placeholder="Enetr Your Name" onChange={(e) => setName(e.target.value)}  value={name}  />&nbsp;&nbsp;&nbsp;
         <label >Enter Age</label>
-        <input placeholder="Enetr Your Name"  onChange={(e) => setName(e.target.value)}  value={age}/>&nbsp;&nbsp;
+        <input placeholder="Enetr Your Age"  type="number" onChange={(e) => setAge(e.target.value)}  value={age}/>&nbsp;&nbsp;
         {
           !update ? 
-           <button className="btn  btn-primary" >Update</button>
+           <button className="btn  btn-primary" onClick={()=>toupdate()} >Update</button>
           :
-          <button  className="btn btn-primary ">Save</button>
+          <button  className="btn btn-primary " onClick={()=>toSave()}>Save</button>
 
         }&nbsp;&nbsp;&nbsp;
         <button className="btn  btn-primary" onClick={()=> toClear()}>Clear</button>
